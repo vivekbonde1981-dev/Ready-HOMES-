@@ -212,18 +212,18 @@ import { Menu} from 'lucide-react'
           ref={loaderRef}
           className="fixed top-0 left-0 w-screen h-screen z-50 flex justify-center items-center select-none bg-[#050a0e] text-[#f5f2eb]"
         >
-          <div ref={elementsContainerRef} className="w-4/5 max-w-[500px] flex flex-col items-center tracking-[0.25em] font-sans">
+          <div ref={elementsContainerRef} className="w-4/5 max-w-125 flex flex-col items-center tracking-[0.25em] font-sans">
             <h1 className="text-sm font-light mb-8 uppercase opacity-90">
               ready | homes
             </h1>
-            <div className="w-full h-[1px] bg-white/10 relative mb-6">
+            <div className="w-full h-px bg-white/10 relative mb-6">
               <div
                 ref={progressBarRef}
                 className="absolute top-0 left-0 h-full w-0 bg-[#f5f2eb] transition-all duration-100"
               />
             </div>
             <div className="w-full flex justify-between text-[9px] font-light opacity-60 uppercase">
-              <div className="min-w-[250px] tracking-widest">{statusText}</div>
+              <div className="min-w-62.5 tracking-widest">{statusText}</div>
               <div><span ref={percentTextRef}>0</span>%</div>
             </div>
           </div>
@@ -374,7 +374,7 @@ import { Menu} from 'lucide-react'
           />
 
           {/* Overlay Vistas */}
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#050a0e]/60 via-transparent to-[#050a0e] z-10 pointer-events-none"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-linear-to-b from-[#050a0e]/60 via-transparent to-[#050a0e] z-10 pointer-events-none"></div>
 
           {/* Scrolling Typography Panels */}
           <div className="absolute top-0 left-0 w-full h-full z-20 pointer-events-none flex items-center justify-center">
@@ -510,7 +510,7 @@ import { Menu} from 'lucide-react'
             {/* Showcase Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {projects.map((proj) => (
-                <div key={proj.id} className="group flex flex-col justify-between bg-white/[0.02] border border-white/5 rounded-2xl p-6 hover:bg-white/[0.04] hover:border-white/15 transition-all duration-500 cursor-pointer">
+                <div key={proj.id} className="group flex flex-col justify-between bg-white/2 border border-white/5 rounded-2xl p-6 hover:bg-white/4 hover:border-white/15 transition-all duration-500 cursor-pointer">
                   <div>
                     {/* Media Block with absolute layout fallback */}
                     <div className="relative w-full h-64 overflow-hidden rounded-xl mb-6 bg-black/40">
