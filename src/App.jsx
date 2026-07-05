@@ -325,14 +325,14 @@ import { Menu} from 'lucide-react'
             const startTime = (index + 1) * phaseDuration;
             
             tl.fromTo(slideEl,
-              { opacity: 0, y: 500,x:750 },
-              { opacity: 1, y: 290,x:750, duration: phaseDuration * 0.4, ease: 'power2.out' },
+              { opacity: 0, y:400 },
+              { opacity: 1, y:280, duration: phaseDuration * 0.4, ease: 'power2.out' },
               startTime
             )
             .to(slideEl,
               { 
                 opacity: 0, 
-                y: 180, // Fades and glides directly down towards the bottom 
+                y: 180, // Fades an glides directly down towards the bottom 
                 duration: phaseDuration * 0.4, 
                 ease: 'power2.in' 
               },
@@ -393,7 +393,7 @@ import { Menu} from 'lucide-react'
             </div>
 
             {/* Subsequent Phases: Title & Description coming in, then fading out to the bottom */}
-            {slidesData.map((item, i) => (
+            {/* {slidesData.map((item, i) => (
               <div 
                 key={i} 
                 ref={addToSlideRefs} 
@@ -412,7 +412,7 @@ import { Menu} from 'lucide-react'
                   {item.title}
                 </h2>
               </div>
-            ))}
+            ))} */}
           </div>
 
           {/* Immersive HUD (Heads-up Display) Overlay */}
@@ -434,22 +434,28 @@ import { Menu} from 'lucide-react'
             </div>
 
             {/* Premium Call to Action */}
-            {/* <div className="self-center mb-12 md:mb-16 pointer-events-auto flex flex-col items-center visibility-hidden">
-              <button 
-                onClick={scrollToChronicles}
-                className="w-16 h-16 rounded-full flex items-center justify-center 
-                           bg-white/5 backdrop-blur-md border border-white/20 
-                           shadow-[0_4px_30px_rgba(0,0,0,0.2)] 
-                           hover:bg-[#f5f2eb] hover:text-[#050a0e] hover:scale-105 transition-all duration-500 ease-out group cursor-pointer"
+            <div className="self-center mb-12 md:mb-16 pointer-events-auto flex flex-col items-center visibility-hidden">
+              {slidesData.map((item, i) => (
+              <div 
+                key={i} 
+                ref={addToSlideRefs} 
+                className="absolute flex flex-col items-center justify-center text-center px-6 opacity-0 select-none"
               >
-                <svg className="w-5 h-5 transform group-hover:translate-y-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
-              </button>
-              <span className="text-[#f5f2eb] mt-9 text-[9px] tracking-[0.3em] uppercase font-light opacity-60">
-                Scroll to Chronicles
-              </span>
-            </div> */}
+                <p 
+                  className="text-xs md:text-sm font-light tracking-[0.4em] mb-4 uppercase text-[#f5f2eb]/80"
+                  style={{ textShadow: '0px 2px 10px rgba(0,0,0,0.6)' }}
+                >
+                  {item.desc}
+                </p>
+                <h2 
+                  className="text-5xl md:text-7xl font-semibold tracking-[0.15em] uppercase text-[#f5f2eb]"
+                  style={{ textShadow: '0px 4px 20px rgba(0,0,0,0.8)' }}
+                >
+                  {item.title}
+                </h2>
+              </div>
+            ))}
+            </div>
             <span className=" relative bottom-0 left-[45%] text-[#f5f2eb] mt-9 text-[9px] tracking-[0.3em] uppercase items-center font-light opacity-60">
                 Scroll to Chronicles
               </span>
