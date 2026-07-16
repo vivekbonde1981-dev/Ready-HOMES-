@@ -418,8 +418,8 @@ import { Menu} from 'lucide-react'
           {/* Immersive HUD (Heads-up Display) Overlay */}
           <div className="absolute top-0 left-0 w-full h-full z-30 flex flex-col justify-between p-6 md:p-12 pointer-events-none">
             <div className="flex justify-between items-center text-[#f5f2eb] pointer-events-auto">
-              <div className="tracking-[0.3em] md:text-lg text-sm font-semibold uppercase">
-                ready | homes
+              <div className="tracking-[0.3em] md:text-lg text-[10px] font-semibold uppercase">
+                <p>ready | homes</p>
               </div>
 
               <div  className=" invisible md:visible text-[10px] md:text-[15px] lg:text-[15px] tracking-widest text-white/50 border border-white/10 px-8 py-3 rounded-full uppercase backdrop-blur-md bg-[#050a0e]/30 flex flex-row gap-2 md:gap-8 items-center">
