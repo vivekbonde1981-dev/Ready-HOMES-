@@ -330,24 +330,25 @@ const BiophilicChronicles = () => {
     </section>
   );
 };
-
 const App = () => {
   const [loadingComplete, setLoadingComplete] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
-  const [videoBlobUrl, setVideoBlobUrl] = useState('');
+  const [videoUrlPath, setVideoUrlPath] = useState('');
+  const [isXhrFailed, setIsXhrFailed] = useState(false);
 
   useEffect(() => {
-    // Dynamically query target assets based on hardware layout profiles
     const useMobileFile = window.matchMedia('(max-width: 768px)').matches;
     const targetVideoFile = useMobileFile ? '/output1.mp4' : '/output2.mp4';
+    
+    // Fallback path setup right away to prevent empty string ("") warnings
+    setVideoUrlPath(targetVideoFile);
 
     const xhr = new XMLHttpRequest();
     xhr.open('GET', targetVideoFile, true);
     xhr.responseType = 'blob';
 
-    // Track binary frame metrics transferring across network hooks
     xhr.onprogress = (event) => {
-      if (event.lengthComputable) {
+      if (event.lengthComputable && !isXhrFailed) {
         const percentage = Math.round((event.loaded / event.total) * 100);
         setDownloadProgress(percentage);
       }
@@ -355,16 +356,17 @@ const App = () => {
 
     xhr.onload = () => {
       if (xhr.status === 200) {
-        // Convert binary stream data into an immediately accessible local object URL pointer
         const blobUrl = URL.createObjectURL(xhr.response);
-        setVideoBlobUrl(blobUrl);
+        setVideoUrlPath(blobUrl);
         setDownloadProgress(100);
+      } else {
+        setIsXhrFailed(true);
       }
     };
 
     xhr.onerror = () => {
-      console.error("Local resource preload thread tracking interrupted.");
-      setDownloadProgress(100); // Safety validation switch to unblock layout access
+      console.warn("XHR Thread blocked by local server constraints. Switching to native HTML5 preload engine.");
+      setIsXhrFailed(true);
     };
 
     xhr.send();
@@ -372,12 +374,45 @@ const App = () => {
     return () => {
       xhr.abort();
     };
-  }, []);
+  }, [isXhrFailed]);
+
+  // Native HTML5 Video Buffering Tracker (Fires only if XHR gets blocked)
+  const handleNativeVideoProgress = (e) => {
+    if (!isXhrFailed) return;
+    
+    const videoElement = e.target;
+    if (videoElement.buffered.length > 0) {
+      const bufferedEnd = videoElement.buffered.end(videoElement.buffered.length - 1);
+      const duration = videoElement.duration;
+      if (duration > 0) {
+        const percentage = Math.round((bufferedEnd / duration) * 100);
+        
+        // Don't let progress go backward if it's already higher
+        setDownloadProgress((prev) => Math.max(prev, percentage));
+        
+        if (percentage >= 95) {
+          setDownloadProgress(100);
+        }
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#050a0e] text-[#f5f2eb] font-sans antialiased selection:bg-blue-500/30">
       
-      {/* Structural Network Context Loader */}
+      {/* Hidden background video link acting as native preloader if XHR fails */}
+      {isXhrFailed && !loadingComplete && (
+        <video
+          src={videoUrlPath}
+          preload="auto"
+          muted
+          className="hidden"
+          onProgress={handleNativeVideoProgress}
+          onCanPlayThrough={() => setDownloadProgress(100)}
+        />
+      )}
+
+      {/* Loader UI Element */}
       {!loadingComplete && (
         <PremiumLoader 
           progress={downloadProgress} 
@@ -385,12 +420,14 @@ const App = () => {
         />
       )}
 
-      {/* Render core landing blocks once caching validation finishes */}
+      {/* Main UI Container */}
       <div 
         className="w-full transition-opacity duration-1000 ease-out"
         style={{ opacity: loadingComplete ? 1 : 0 }}
       >
-        {loadingComplete && <HeroVideoScrub preloadedVideoUrl={videoBlobUrl} />}
+        {loadingComplete && videoUrlPath && (
+          <HeroVideoScrub preloadedVideoUrl={videoUrlPath} />
+        )}
 
         <section className="h-screen w-full flex flex-col items-center justify-center border-t border-white/5 relative z-20">
           <h2 className="text-2xl font-light tracking-widest uppercase mb-4">Daylight Amenities Tour</h2>
