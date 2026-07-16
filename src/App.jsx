@@ -2,9 +2,57 @@ import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Menu } from 'lucide-react';
+import { Restation } from './Rest.jsx';
+
+import {
+  Layers,
+  Store,
+  Lightbulb,
+  Star,
+  ChevronLeft,
+  ChevronRight,
+  SlidersHorizontal,
+  ChevronDown,
+  Quote,
+  Building2,
+  Award,
+  ArrowRight,
+  MapPin,
+  Phone,
+  Mail,
+} from "lucide-react";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
+
+const useScrollReveal = () => {
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const currentRef = ref.current;
+    if (!currentRef) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(currentRef);
+        }
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
+    );
+
+    
+
+    observer.observe(currentRef);
+    return () => {
+      if (currentRef) observer.disconnect();
+    };
+  }, []);
+
+  return [ref, isVisible];
+};
 
 const PremiumLoader = ({ progress, onComplete }) => {
   const [statusText, setStatusText] = useState('INITIALIZING ENVIRONMENT');
@@ -61,16 +109,16 @@ const PremiumLoader = ({ progress, onComplete }) => {
   return (
     <div
       ref={loaderRef}
-      className="fixed top-0 left-0 w-screen h-screen z-50 flex justify-center items-center select-none bg-[#050a0e] text-[#f5f2eb]"
+      className="fixed top-0 left-0 w-screen h-screen z-50 flex justify-center items-center select-none bg-[#020617] text-[#f8fafc]"
     >
       <div ref={elementsContainerRef} className="w-4/5 max-w-125 flex flex-col items-center tracking-[0.25em] font-sans">
         <h1 className="text-sm font-light mb-8 uppercase opacity-90">
           ready | homes
         </h1>
-        <div className="w-full h-px bg-white/10 relative mb-6">
+        <div className="w-full h-px bg-sky-400/15 relative mb-6">
           <div
             ref={progressBarRef}
-            className="absolute top-0 left-0 h-full w-0 bg-[#f5f2eb] transition-all duration-300 ease-out"
+            className="absolute top-0 left-0 h-full w-0 bg-sky-400 transition-all duration-300 ease-out"
           />
         </div>
         <div className="w-full flex justify-between text-[9px] font-light opacity-60 uppercase">
@@ -154,12 +202,12 @@ const HeroVideoScrub = ({ preloadedVideoUrl }) => {
           const startTime = (index + 1) * phaseDuration;
           
           tl.fromTo(slideEl,
-            { opacity: 0, y: 400 },
-            { opacity: 1, y: 280, duration: phaseDuration * 0.4, ease: 'power2.out' },
+            { opacity: 0, y: 48 },
+            { opacity: 1, y: 0, duration: phaseDuration * 0.4, ease: 'power2.out' },
             startTime
           )
           .to(slideEl,
-            { opacity: 0, y: 180, duration: phaseDuration * 0.4, ease: 'power2.in' },
+            { opacity: 0, y: -20, duration: phaseDuration * 0.4, ease: 'power2.in' },
             startTime + phaseDuration * 0.6
           );
         });
@@ -179,7 +227,7 @@ const HeroVideoScrub = ({ preloadedVideoUrl }) => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full h-screen overflow-hidden bg-[#050a0e]">
+    <div ref={containerRef} className="relative w-full h-screen overflow-hidden bg-[#020617]">
       <video
         ref={videoRef}
         src={preloadedVideoUrl} // Uses memory-mapped byte block addresses directly
@@ -189,15 +237,15 @@ const HeroVideoScrub = ({ preloadedVideoUrl }) => {
         className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none opacity-80"
       />
 
-      <div className="absolute top-0 left-0 w-full h-full bg-linear-to-b from-[#050a0e]/60 via-transparent to-[#050a0e] z-10 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-full bg-linear-to-b from-[#020617]/80 via-[#020617]/10 to-[#020617] z-10 pointer-events-none" />
 
       {/* Main Core Viewport Typography Elements */}
       <div className="absolute top-0 left-0 w-full h-full z-20 pointer-events-none flex items-center justify-center">
         <div ref={introRef} className="absolute flex flex-col items-center justify-center text-center px-4 select-none">
-          <h1 className="text-[40px] md:text-[5rem] font-bold tracking-[0.2em] leading-[0.85] uppercase text-[#f5f2eb] drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+          <h1 className="text-[40px] md:text-[5rem] font-bold tracking-[0.2em] leading-[0.85] uppercase text-[#f8fafc] drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
             READY
           </h1>
-          <h1 className="text-[65px] md:text-[11rem] font-bold tracking-tighter leading-[0.85] uppercase text-[#f5f2eb]/90 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] mt-4">
+          <h1 className="text-[65px] md:text-[11rem] font-bold tracking-tighter leading-[0.85] uppercase text-sky-300/90 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] mt-4">
             HOMES
           </h1>
         </div>
@@ -205,43 +253,27 @@ const HeroVideoScrub = ({ preloadedVideoUrl }) => {
 
       {/* Persistent Immersive HUD Display Panels */}
       <div className="absolute top-0 left-0 w-full h-full z-30 flex flex-col justify-between p-6 md:p-12 pointer-events-none">
-        <div className="flex justify-between items-center text-[#f5f2eb] pointer-events-auto">
-          <div className="tracking-[0.3em] md:text-lg text-[10px] font-semibold uppercase">
-            <p>ready | homes</p>
-          </div>
-
-          <div className="hidden md:flex text-[15px] tracking-widest text-white/50 border border-white/10 px-8 py-3 rounded-full uppercase backdrop-blur-md bg-[#050a0e]/30 flex-row gap-8 items-center">
-            <h2>Home</h2>
-            <h2>SERVICES</h2>
-            <h2>PROJECTS</h2>
-            <h2>CONTACT US</h2>
-          </div>
-          <div className="text-[10px] tracking-widest text-white/50 border border-white/10 px-3 py-1 rounded-full uppercase backdrop-blur-md bg-[#050a0e]/30">
-            <Menu size={34} className="inline-block ml-1" />
-          </div>
-        </div>
+       
 
         {/* Slides Content Layer */}
-        <div className="self-center mb-12 md:mb-16 pointer-events-auto flex flex-col items-center relative w-full h-40">
+        <div className="absolute bottom-10 left-1/2 w-full max-w-4xl -translate-x-1/2 px-6 md:px-12 pointer-events-auto flex flex-col items-center justify-end text-center h-44 md:h-52">
           {slidesData.map((item, i) => (
             <div 
               key={i} 
               ref={addToSlideRefs} 
-              className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 opacity-0 select-none"
+              className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-end text-center px-6 opacity-0 select-none"
             >
-              <p className="text-xs md:text-sm font-light tracking-[0.4em] mb-4 uppercase text-[#f5f2eb]/80 drop-shadow-[0px_2px_10px_rgba(0,0,0,0.6)]">
+              <p className="text-xs md:text-sm font-light tracking-[0.4em] mb-3 uppercase text-slate-300/80 drop-shadow-[0px_2px_10px_rgba(0,0,0,0.6)]">
                 {item.desc}
               </p>
-              <h2 className="text-5xl md:text-7xl font-semibold tracking-[0.15em] uppercase text-[#f5f2eb] drop-shadow-[0px_4px_20px_rgba(0,0,0,0.8)]">
+              <h2 className="text-4xl md:text-6xl font-semibold tracking-[0.15em] uppercase text-[#f8fafc] drop-shadow-[0px_4px_20px_rgba(0,0,0,0.8)]">
                 {item.title}
               </h2>
             </div>
           ))}
         </div>
 
-        <span className="text-center w-full text-[#f5f2eb] text-[9px] tracking-[0.3em] uppercase font-light opacity-60">
-          Scroll to Chronicles
-        </span>
+        
       </div>
     </div>
   );
@@ -276,22 +308,22 @@ const BiophilicChronicles = () => {
   ];
 
   return (
-    <section id="chronicles-section" className="min-h-screen w-full flex flex-col justify-center items-center bg-[#050a0e] py-24 px-6 md:px-12 relative z-20">
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full filter blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full filter blur-[120px] pointer-events-none" />
+    <section id="chronicles-section" className="min-h-screen w-full flex flex-col justify-center items-center bg-[#020617] py-24 px-6 md:px-12 relative z-20">
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full filter blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-950/40 rounded-full filter blur-[120px] pointer-events-none" />
 
       <div className="max-w-6xl w-full z-10">
         <div className="text-center mb-20">
-          <span className="text-[10px] tracking-[0.4em] text-[#d4af37] font-semibold uppercase mb-3 block">Estates Catalog</span>
-          <h2 className="text-3xl md:text-5xl font-light tracking-wide text-white uppercase">The Chronicles</h2>
-          <p className="text-xs text-[#f5f2eb]/40 max-w-md mx-auto mt-4 tracking-wider leading-relaxed">
+          <span className="text-[10px] tracking-[0.4em] text-sky-400 font-semibold uppercase mb-3 block">Estates Catalog</span>
+          <h2 className="text-3xl md:text-5xl font-light tracking-wide text-[#f8fafc] uppercase">The Chronicles</h2>
+          <p className="text-xs text-slate-400 max-w-md mx-auto mt-4 tracking-wider leading-relaxed">
             Explore our signature biophilic developments tailored perfectly to harmonise with world-class natural matrices.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {projects.map((proj) => (
-            <div key={proj.id} className="group flex flex-col justify-between bg-white/2 border border-white/5 rounded-2xl p-6 hover:bg-white/4 hover:border-white/15 transition-all duration-500 cursor-pointer">
+            <div key={proj.id} className="group flex flex-col justify-between bg-slate-950/60 border border-sky-400/10 rounded-2xl p-6 hover:bg-slate-900/80 hover:border-sky-300/20 transition-all duration-500 cursor-pointer">
               <div>
                 <div className="relative w-full h-64 overflow-hidden rounded-xl mb-6 bg-black/40">
                   <img 
@@ -303,21 +335,21 @@ const BiophilicChronicles = () => {
                       e.target.src = `https://placehold.co/800x640/15202b/ffffff?text=${proj.title}`;
                     }}
                   />
-                  <div className="absolute top-4 left-4 text-[10px] bg-[#050a0e]/60 backdrop-blur-md px-3 py-1 rounded-full text-[#d4af37] tracking-widest font-mono border border-white/10">
+                  <div className="absolute top-4 left-4 text-[10px] bg-[#020617]/70 backdrop-blur-md px-3 py-1 rounded-full text-sky-300 tracking-widest font-mono border border-sky-400/15">
                     {proj.id}
                   </div>
                 </div>
 
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl font-normal text-[#f5f2eb] tracking-wide group-hover:text-[#d4af37] transition-colors">{proj.title}</h3>
-                  <span className="text-[10px] text-white/40 uppercase tracking-widest pt-1">{proj.location}</span>
+                  <h3 className="text-xl font-normal text-[#f8fafc] tracking-wide group-hover:text-sky-300 transition-colors">{proj.title}</h3>
+                  <span className="text-[10px] text-slate-400 uppercase tracking-widest pt-1">{proj.location}</span>
                 </div>
                 
-                <p className="text-[9px] tracking-widest text-[#d4af37] uppercase font-semibold mb-4 opacity-90">{proj.specs}</p>
-                <p className="text-xs text-[#f5f2eb]/60 leading-relaxed font-light">{proj.desc}</p>
+                <p className="text-[9px] tracking-widest text-sky-400 uppercase font-semibold mb-4 opacity-90">{proj.specs}</p>
+                <p className="text-xs text-slate-300 leading-relaxed font-light">{proj.desc}</p>
               </div>
 
-              <div className="pt-6 border-t border-white/5 mt-6 flex justify-between items-center text-[10px] uppercase tracking-widest text-white/50 group-hover:text-white transition-colors">
+              <div className="pt-6 border-t border-sky-400/10 mt-6 flex justify-between items-center text-[10px] uppercase tracking-widest text-slate-400 group-hover:text-white transition-colors">
                 <span>Acquire Manifest</span>
                 <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -330,6 +362,204 @@ const BiophilicChronicles = () => {
     </section>
   );
 };
+
+
+const ContactFooter = () => {
+  const [contactRef, isVisible] = useScrollReveal();
+
+  return (
+    <section
+      ref={contactRef}
+      className="bg-[#060606] text-white pt-24 md:pt-32 px-6 md:px-[5vw] relative z-10"
+      id="contact"
+    >
+      <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-20 pb-24 border-b border-sky-400/10 mb-20">
+        {/* Contact Left - Information */}
+        <div className="col-span-1 lg:col-span-5">
+          <div
+            className={`flex items-center gap-4 mb-4 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          >
+            <div className="h-px w-12 bg-white"></div>
+            <span className="font-mono tracking-[0.2em] text-sm uppercase font-bold text-[#f8fafc]">
+              Get in Touch
+            </span>
+          </div>
+
+          <h2
+            className={`text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight leading-[1.1] transition-all duration-1000 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          >
+            Let's build something
+            <br />
+            <span className="font-semibold text-sky-400">extraordinary.</span>
+          </h2>
+
+          <p
+            className={`text-lg text-slate-400 leading-relaxed mb-12 max-w-[450px] transition-all duration-1000 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          >
+            Ready to transform your legacy into authority? Whether it's a
+            flagship rollout or a bespoke hospitality space, we bring visionary
+            concepts into disciplined execution.
+          </p>
+
+          <div
+            className={`flex flex-col gap-6 transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          >
+            <div className="flex items-start gap-4 text-white text-[15px] font-light">
+              <MapPin size={20} className="text-sky-400 shrink-0 mt-1" />
+              <span>
+               Malkapur Bypass Rd, Ganesh Nagar, Buldhana, Maharashtra 443001
+              </span>
+            </div>
+            <div className="flex items-center gap-4 text-white text-[15px] font-light">
+              <Mail size={20} className="text-sky-400 shrink-0" />
+              <span>studio@happyhomes.in</span>
+            </div>
+            <div className="flex items-center gap-4 text-white text-[15px] font-light">
+              <Phone size={20} className="text-sky-400 shrink-0" />
+              <span>+91 8180951999 </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Contact Right - Form */}
+        <div className="col-span-1 lg:col-span-7">
+          <form
+            className="flex flex-col gap-8"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <div
+              className={`w-full transition-all duration-1000 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+            >
+              <input
+                type="text"
+                className="w-full bg-transparent border-0 border-b border-sky-400/20 text-white py-4 text-lg font-inherit transition-colors focus:outline-none focus:border-sky-400 placeholder-slate-500 font-light"
+                placeholder="Your Name"
+                required
+              />
+            </div>
+            <div
+              className={`w-full transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+            >
+              <input
+                type="email"
+                className="w-full bg-transparent border-0 border-b border-sky-400/20 text-white py-4 text-lg font-inherit transition-colors focus:outline-none focus:border-sky-400 placeholder-slate-500 font-light"
+                placeholder="Email Address"
+                required
+              />
+            </div>
+            <div
+              className={`w-full transition-all duration-1000 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+            >
+              <input
+                type="text"
+                className="w-full bg-transparent border-0 border-b border-sky-400/20 text-white py-4 text-lg font-inherit transition-colors focus:outline-none focus:border-sky-400 placeholder-slate-500 font-light"
+                placeholder="Company / Project Name"
+              />
+            </div>
+            <div
+              className={`w-full transition-all duration-1000 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+            >
+              <textarea
+                className="w-full bg-transparent border-0 border-b border-sky-400/20 text-white py-4 text-lg font-inherit transition-colors focus:outline-none focus:border-sky-400 placeholder-slate-500 font-light resize-y min-h-[120px]"
+                placeholder="Tell us about your project..."
+                rows="4"
+                required
+              ></textarea>
+            </div>
+            <div
+              className={`transition-all duration-1000 delay-600 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+            >
+              <button
+                type="submit"
+                className="flex items-center gap-3 bg-[#f8fafc] text-[#020617] border-none px-10 py-4 uppercase tracking-[0.1em] text-sm font-bold cursor-pointer transition-colors mt-4 rounded hover:bg-sky-400 hover:text-[#020617] group w-max"
+              >
+                Send Message
+                <ArrowRight
+                  size={16}
+                  className="transition-transform group-hover:translate-x-2"
+                />
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Footer Area */}
+      <footer className="pb-10">
+        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between gap-12 mb-10">
+          <div className="flex flex-col gap-6 ">
+            <span className="text-2xl font-bold tracking-[2px]">
+           
+
+
+            </span>
+          </div>
+          <div className="flex flex-col md:flex-row gap-12 md:gap-20">
+            <div className="flex flex-col gap-4">
+              <h4 className="text-sm text-slate-400 uppercase tracking-[2px] mb-2">
+                Studio
+              </h4>
+              <a
+                href="#"
+                className="text-slate-300 no-underline text-[15px] font-light hover:text-sky-300 transition-colors"
+              >
+                About Us
+              </a>
+              <a
+                href="#"
+                className="text-slate-300 no-underline text-[15px] font-light hover:text-sky-300 transition-colors"
+              >
+                Selected Works
+              </a>
+              <a
+                href="#"
+                className="text-slate-300 no-underline text-[15px] font-light hover:text-sky-300 transition-colors"
+              >
+                Services
+              </a>
+              <a
+                href="#"
+                className="text-slate-300 no-underline text-[15px] font-light hover:text-sky-300 transition-colors"
+              >
+                Careers
+              </a>
+            </div>
+            <div className="flex flex-col gap-4">
+              <h4 className="text-sm text-slate-400 uppercase tracking-[2px] mb-2">
+                Legal
+              </h4>
+              <a
+                href="#"
+                className="text-slate-300 no-underline text-[15px] font-light hover:text-sky-300 transition-colors"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="#"
+                className="text-slate-300 no-underline text-[15px] font-light hover:text-sky-300 transition-colors"
+              >
+                Terms of Service
+              </a>
+              <a
+                href="#"
+                className="text-slate-300 no-underline text-[15px] font-light hover:text-sky-300 transition-colors"
+              >
+                Cookie Policy
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-[1400px] mx-auto flex justify-center pt-10 border-t border-sky-400/10">
+          <p className="text-slate-500 text-sm">
+            &copy; {new Date().getFullYear()} Tak Spaces Architecture & Design.
+            All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </section>
+  );
+};
+
 const App = () => {
   const [loadingComplete, setLoadingComplete] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
@@ -398,7 +628,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050a0e] text-[#f5f2eb] font-sans antialiased selection:bg-blue-500/30">
+    <div className="min-h-screen bg-[#020617] text-[#f8fafc] font-sans antialiased selection:bg-sky-500/30">
       
       {/* Hidden background video link acting as native preloader if XHR fails */}
       {isXhrFailed && !loadingComplete && (
@@ -429,16 +659,14 @@ const App = () => {
           <HeroVideoScrub preloadedVideoUrl={videoUrlPath} />
         )}
 
-        <section className="h-screen w-full flex flex-col items-center justify-center border-t border-white/5 relative z-20">
-          <h2 className="text-2xl font-light tracking-widest uppercase mb-4">Daylight Amenities Tour</h2>
-          <p className="text-xs tracking-widest opacity-40 uppercase">Keep scrolling for horizontal reveals</p>
-        </section>
+       
+
+        <Restation />
 
         <BiophilicChronicles />
+        <ContactFooter />
 
-        <footer className="border-t border-white/5 py-8 text-center text-[10px] tracking-widest uppercase opacity-40 relative z-20">
-          © 2026 READY HOMES INTUITION. ALL POWER COMPLIANT.
-        </footer>
+       
       </div>
     </div>
   );
